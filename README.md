@@ -7,7 +7,7 @@ My solution to the [Synacor Challange](https://challenge.synacor.com/) based on 
 ## Usage
 
 ```shell
-python -m synacor spec/challenge.bin
+python -m synacor
 ```
 
 ## Contributing

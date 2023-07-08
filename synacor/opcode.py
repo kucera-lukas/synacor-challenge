@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC
 from abc import abstractmethod
 from typing import TYPE_CHECKING
@@ -244,7 +245,7 @@ class InOpcode(Opcode):
     name = 'in'
 
     def execute(self) -> None:
-        value = input()
+        value = sys.stdin.read(1)
         self.vm.store(self.vm.address + 1, ord(value[0]))
         self.vm.address += 2
 
@@ -278,6 +279,6 @@ OPCODES: dict[int, type[Opcode]] = {
     17: CallOpcode,
     18: RetOpcode,
     19: OutOpcode,
-    # 20: InOpcode,
+    20: InOpcode,
     21: NoopOpcode,
 }
