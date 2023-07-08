@@ -1,2 +1,25 @@
 # synacor-challenge
-My solution to the Synacor Challange
+
+My solution to the [Synacor Challange](https://challenge.synacor.com/) based on the [archived specification](https://github.com/Aneurysm9/vm_challenge)
+
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/kucera-lukas/synacor-challenge/main.svg)](https://results.pre-commit.ci/latest/github/kucera-lukas/synacor-challenge/main)
+
+## Usage
+
+```shell
+python -m synacor spec/challenge.bin
+```
+
+## Contributing
+
+```shell
+pre-commit install
+```
+
+## Credits
+
+Based on the [archived specification](https://github.com/Aneurysm9/vm_challenge)
+
+## License
+
+Developed under the [MIT](https://github.com/kucera-lukas/synacor-challenge/blob/master/LICENSE) license.
