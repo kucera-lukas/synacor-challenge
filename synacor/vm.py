@@ -18,8 +18,6 @@ class VM:
         while 1:
             opcode = self.get_op(self.read_memory(self.address))
 
-            # print(f"'{opcode.name}'")
-
             opcode.execute()
 
     def read_memory(self, address: int) -> int:
@@ -123,20 +121,13 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main() -> int:
-    parser = get_parser()
-    args = parser.parse_args()
-
-    vm = VM(args.filepath)  # type: ignore[misc]
+def main(filepath: str) -> int:
+    vm = VM(filepath)
 
     try:
         vm.run()
     except Exception as e:
-        print(e)
+        print(f'Exception: {e}')
         return 1
 
     return 0
-
-
-if __name__ == '__main__':
-    raise SystemExit(main())
