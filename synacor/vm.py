@@ -1,10 +1,14 @@
 from __future__ import annotations
 
-import argparse
+import logging
 import struct
+from collections.abc import Iterator
 
 from synacor.opcode import Opcode
 from synacor.opcode import OPCODES
+
+
+logger = logging.getLogger(__name__)
 
 
 class VM:
@@ -13,11 +17,12 @@ class VM:
         self.stack: list[int] = []
         self.registers = Registers()
         self.address = 0
+        self.buffer: Iterator[str] | None = None
+        self.debug = False
 
     def run(self) -> None:
         while 1:
             opcode = self.get_op(self.read_memory(self.address))
-
             opcode.execute()
 
     def read_memory(self, address: int) -> int:
@@ -62,8 +67,6 @@ class Memory:
     def __init__(self, filepath: str) -> None:
         self._memory: list[int] = []
         self.filepath: str = filepath
-
-        self.load_file()
 
     def __getitem__(self, key: int) -> int:
         return self.memory[key]
@@ -112,13 +115,29 @@ class Registers:
             raise ValueError(f'Invalid register {register}')
 
 
-def get_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog='synacor-vm',
-        description='Run the Synacor Challenge binary',
-    )
-    parser.add_argument('filepath', help='Path to the binary file')
-    return parser
+def disassemble(filepath: str) -> None:
+    memory = Memory(filepath)
+    address = 0
+
+    while address < len(memory.memory):
+        opcode = memory[address]
+        try:
+            cls = OPCODES[opcode]
+        except KeyError:
+            print(f'{address}: invalid [{opcode}]')
+            address += 1
+        else:
+            arguments = [
+                memory[address + i]
+                for i in range(1, cls.argument_count + 1)
+            ]
+
+            print(
+                f'{address}: {cls.name}'
+                f'[{", ".join(f"{a}" for a in arguments)}]',
+            )
+
+            address += cls.argument_count + 1
 
 
 def main(filepath: str) -> int:
@@ -127,7 +146,7 @@ def main(filepath: str) -> int:
     try:
         vm.run()
     except Exception as e:
-        print(f'Exception: {e}')
+        logger.exception(e)
         return 1
 
     return 0

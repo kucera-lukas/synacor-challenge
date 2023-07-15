@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import logging
 import subprocess
+
+logger = logging.getLogger(__name__)
 
 CMD = [
     'python',
@@ -64,13 +67,16 @@ STEPS = [
     'use teleporter',
     'take business card',
     'take strange book',
+    'look strange book',
+    'fix teleporter',
+    'use teleporter',
 ]
 
 
 def main() -> int:
     with subprocess.Popen(CMD, stdin=subprocess.PIPE) as proc:
         if proc.stdin is None:
-            print('Failed to start process')
+            logger.error('Failed to start process')
             return 1
 
         for step in STEPS:
