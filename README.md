@@ -6,8 +6,35 @@ My solution to the [Synacor Challange](https://challenge.synacor.com/) based on 
 
 ## Usage
 
+### VM
+
 ```shell
-python -m synacor
+python -m synacor spec/challenge.bin
+```
+
+### Adventure
+
+```shell
+python -m synacor adventure
+```
+
+### Dissassemble
+
+```shell
+python -m synacor disassemble spec/challenge.bin
+```
+
+### Coins
+
+```shell
+python -m synacor coins
+```
+
+### Energy level
+
+```shell
+rustc synacor/energy_level.rs
+./energy_level
 ```
 
 ## Contributing

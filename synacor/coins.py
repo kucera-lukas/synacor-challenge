@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import itertools
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 RESULT = 399
@@ -21,10 +24,10 @@ def compute(a: int, b: int, c: int, d: int, e: int) -> int:
 def main() -> int:
     for combination in itertools.permutations(COINS.items()):
         if compute(*(c[1] for c in combination)) == RESULT:
-            print(f'Solution is {combination}')
+            logger.info(f'Solution is {combination}')
             break
     else:
-        print('No solution found')
+        logger.error('No solution found')
         return 1
 
     return 0

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import logging
 
 from synacor import adventure
 from synacor import coins
 from synacor import vm
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -24,6 +28,11 @@ def get_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser('coins', help='Solve the coins puzzle')
 
+    dissasemble_parser = subparsers.add_parser(
+        'disassemble', help='Disassemble the Synacor Challenge binary',
+    )
+    dissasemble_parser.add_argument('filepath', help='Path to the binary file')
+
     return parser
 
 
@@ -32,16 +41,21 @@ def main() -> int:
     args = parser.parse_args()
 
     command: str = args.command
+    filepath: str
 
     if command == 'adventure':
         return adventure.main()
     elif command == 'vm':
-        filepath: str = args.filepath
+        filepath = args.filepath
         return vm.main(filepath)
+    elif command == 'disassemble':
+        filepath = args.filepath
+        vm.disassemble(filepath)
+        return 0
     elif command == 'coins':
         return coins.main()
 
-    print(f'Unknown command {command}')
+    logger.error(f'Unknown command {command}')
     return 1
 
 
