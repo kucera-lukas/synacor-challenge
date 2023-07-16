@@ -37,6 +37,12 @@ rustc synacor/energy_level.rs
 ./energy_level
 ```
 
+### Orb maze
+
+```shell
+python -m synacor orb-maze
+```
+
 ## Contributing
 
 ```shell
