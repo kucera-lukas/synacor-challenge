@@ -5,6 +5,7 @@ import logging
 
 from synacor import adventure
 from synacor import coins
+from synacor import orb_maze
 from synacor import vm
 
 
@@ -19,7 +20,15 @@ def get_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest='command', required=True)
 
-    subparsers.add_parser('adventure', help='Play the adventure game')
+    adventure_parser = subparsers.add_parser(
+        'adventure',
+        help='Play the adventure game',
+    )
+    adventure_parser.add_argument(
+        '-i', '--interactive',
+        action='store_true',
+        help='Continue the game in interactive mode',
+    )
 
     vm_parser = subparsers.add_parser(
         'vm', help='Run the Synacor Challenge binary',
@@ -33,6 +42,11 @@ def get_parser() -> argparse.ArgumentParser:
     )
     dissasemble_parser.add_argument('filepath', help='Path to the binary file')
 
+    subparsers.add_parser(
+        'orb-maze',
+        help='Solve the orb maze puzzle',
+    )
+
     return parser
 
 
@@ -44,7 +58,8 @@ def main() -> int:
     filepath: str
 
     if command == 'adventure':
-        return adventure.main()
+        interactive: bool = args.interactive
+        return adventure.main(interactive)
     elif command == 'vm':
         filepath = args.filepath
         return vm.main(filepath)
@@ -54,6 +69,8 @@ def main() -> int:
         return 0
     elif command == 'coins':
         return coins.main()
+    elif command == 'orb-maze':
+        return orb_maze.main()
 
     logger.error(f'Unknown command {command}')
     return 1

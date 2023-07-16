@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import subprocess
+from typing import IO
 
 logger = logging.getLogger(__name__)
 
@@ -70,20 +71,66 @@ STEPS = [
     'look strange book',
     'fix teleporter',
     'use teleporter',
+    'north',
+    'north',
+    'north',
+    'north',
+    'north',
+    'north',
+    'north',
+    'east',
+    'take journal',
+    'look journal',
+    'west',
+    'north',
+    'north',
+    'take orb',
+    'look',
+    'north',
+    'east',
+    'east',
+    'north',
+    'west',
+    'south',
+    'east',
+    'east',
+    'west',
+    'north',
+    'north',
+    'east',
+    'vault',
+    'take mirror',
+    'use mirror',
 ]
 
 
-def main() -> int:
+def main(interactive: bool) -> int:
     with subprocess.Popen(CMD, stdin=subprocess.PIPE) as proc:
         if proc.stdin is None:
             logger.error('Failed to start process')
             return 1
 
-        for step in STEPS:
-            proc.stdin.write(f'{step}\n'.encode())
+        stdin: IO[bytes] = proc.stdin
 
-    return 0
+        def write(s: str) -> None:
+            stdin.write(f'{s}\n'.encode())
+            stdin.flush()
+
+        for step in STEPS:
+            write(step)
+
+        if interactive:
+            while proc.poll() is None:
+                try:
+                    command = input()
+                except EOFError:
+                    break
+
+                write(command)
+
+    returncode = proc.poll()
+    return returncode if isinstance(returncode, int) else 1
 
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    raise SystemExit(main(interactive=False))

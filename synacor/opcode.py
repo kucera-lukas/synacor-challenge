@@ -340,7 +340,11 @@ class InOpcode(Opcode):
         super().execute()
 
         if self.vm.buffer is None:
-            command = input('Enter command: ')
+            try:
+                command = input('Enter command: ')
+            except EOFError:
+                logger.info('exiting due to EOF')
+                raise SystemExit(0)
 
             if command in self.custom_commands:
                 logger.info('executing custom command: %r', command)
