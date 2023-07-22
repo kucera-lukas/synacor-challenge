@@ -32,7 +32,7 @@ StepType: TypeAlias = 'Callable[[int, int], int] | int'
 def calculate(path: list[StepType]) -> int:
     start, *path = path
 
-    assert isinstance(start, int)
+    assert isinstance(start, int), 'First step must be an integer'
     value: int = start
 
     op: Callable[[int, int], int]
@@ -46,7 +46,7 @@ def calculate(path: list[StepType]) -> int:
     return value
 
 
-def dfs() -> None:
+def bfs() -> list[str]:
     queue: collections.deque[
         tuple[
             tuple[int, int], list[StepType], list[str],
@@ -70,8 +70,7 @@ def dfs() -> None:
 
         if nxt == END:
             if res == RESULT:
-                logger.info('Found correct steps: %s', steps)
-                continue
+                return steps
             else:
                 continue
 
@@ -88,9 +87,12 @@ def dfs() -> None:
 
             queue.append(((x, y), path + [MAZE[x][y]], steps + [direction]))
 
+    raise RuntimeError('No path found')
+
 
 def main() -> int:
-    dfs()
+    steps = bfs()
+    logger.info('Found correct steps: %s', steps)
 
     return 0
 
